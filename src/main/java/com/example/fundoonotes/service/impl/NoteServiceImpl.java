@@ -52,6 +52,18 @@ public class NoteServiceImpl implements NoteService {
 
         return response;
     }
+    private Note getNoteByIdAndUser(Long noteId, String token) {
+        User user = getUserFromToken(token);
+
+        Note note = noteRepository.findById(noteId)
+                .orElseThrow(() -> new RuntimeException("Note not found"));
+
+        if (!note.getUser().getId().equals(user.getId())) {
+            throw new RuntimeException("Unauthorized access");
+        }
+
+        return note;
+    }
 
     @Override
     public List<NoteResponseDto> getAllNotes(String token) {
@@ -68,5 +80,45 @@ public class NoteServiceImpl implements NoteService {
                     return dto;
                 })
                 .collect(Collectors.toList());
+    }
+    @Override
+    public NoteResponseDto pinNote(Long noteId, String token) {
+
+        Note note = getNoteByIdAndUser(noteId, token);
+
+        note.setPinned(!note.isPinned());
+
+        Note updated = noteRepository.save(note);
+
+        return mapToDto(updated);
+    }
+    @Override
+    public NoteResponseDto archiveNote(Long noteId, String token) {
+
+        Note note = getNoteByIdAndUser(noteId, token);
+
+        note.setArchived(!note.isArchived());
+
+        Note updated = noteRepository.save(note);
+
+        return mapToDto(updated);
+    }
+    @Override
+    public NoteResponseDto trashNote(Long noteId, String token) {
+
+        Note note = getNoteByIdAndUser(noteId, token);
+
+        note.setTrashed(!note.isTrashed());
+
+        Note updated = noteRepository.save(note);
+
+        return mapToDto(updated);
+    }
+    private NoteResponseDto mapToDto(Note note) {
+        NoteResponseDto dto = new NoteResponseDto();
+        dto.setId(note.getId());
+        dto.setTitle(note.getTitle());
+        dto.setDescription(note.getDescription());
+        return dto;
     }
 }
