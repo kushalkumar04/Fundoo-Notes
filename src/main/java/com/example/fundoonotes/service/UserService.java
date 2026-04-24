@@ -10,6 +10,6 @@ import com.fundoonotes.dto.response.LoginResponseDto;
 
 LoginResponseDto login(LoginRequestDto dto);
 public interface UserService {
-
+    private final BCryptPasswordEncoder passwordEncoder;
     UserResponseDto register(UserRegisterRequestDto dto);
 }
