@@ -1,5 +1,6 @@
 package com.example.fundoonotes.service.impl;
-
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 /*
  * User Service Implementation
  * Contains business logic for user registration
@@ -20,6 +21,7 @@ import org.springframework.stereotype.Service;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private static final Logger log = LoggerFactory.getLogger(UserServiceImpl.class);
     private final TokenUtil tokenUtil;
     private final UserRepository userRepository;
     private final TokenUtil tokenUtil;
