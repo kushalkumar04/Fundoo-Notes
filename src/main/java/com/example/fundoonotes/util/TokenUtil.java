@@ -1,14 +1,13 @@
 package com.example.fundoonotes.util;
 
 /*
- * Token Utility
- * Generates and validates simple token (for learning purpose)
+ * Simple Token Utility
+ * Generates and decodes Base64 token using userId
  */
 
 
 
 import org.springframework.stereotype.Component;
-
 import java.util.Base64;
 
 @Component
