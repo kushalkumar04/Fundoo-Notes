@@ -26,5 +26,15 @@ public class UserController {
 
         return ResponseEntity.ok(userService.login(dto));
     }
+    /*
+     * Fetch all notes for authenticated user
+     */
+
+    @GetMapping
+    public List<NoteResponseDto> getAllNotes(
+            @RequestHeader("Authorization") String token) {
+
+        return noteService.getAllNotes(token);
+    }
     }
 }

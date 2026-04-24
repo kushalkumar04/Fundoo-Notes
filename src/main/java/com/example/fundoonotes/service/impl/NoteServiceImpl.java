@@ -52,7 +52,58 @@ public class NoteServiceImpl implements NoteService {
 
         return response;
     }
+    /*
+     * UC9: Fetch all notes for logged-in user
+     */
 
+    @Override
+    public List<NoteResponseDto> getAllNotes(String token) {
+
+        // Extract user from token
+        Long userId = tokenUtil.decodeToken(token);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        // Fetch notes belonging only to this user
+        List<Note> notes = noteRepository.findByUserId(user.getId());
+
+        // Convert Entity → DTO
+        return notes.stream()
+                .map(this::mapToDto)
+                .toList();
+    }
+    private Note getNoteByIdAndUser(Long noteId, String token) {
+        Long userId = tokenUtil.decodeToken(token);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        Note note = noteRepository.findById(noteId)
+                .orElseThrow(() -> new NoteNotFoundException("Note not found"));
+
+        if (!note.getUser().getId().equals(user.getId())) {
+            throw new UnauthorizedException("Unauthorized access");
+        }
+
+        return note;
+    }
+
+    private Note getNoteByIdAndUser(Long noteId, String token) {
+        Long userId = tokenUtil.decodeToken(token);
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        Note note = noteRepository.findById(noteId)
+                .orElseThrow(() -> new NoteNotFoundException("Note not found"));
+
+        if (!note.getUser().getId().equals(user.getId())) {
+            throw new UnauthorizedException("Unauthorized access");
+        }
+
+        return note;
+    }
     @Override
     public List<NoteResponseDto> getAllNotes(String token) {
 
